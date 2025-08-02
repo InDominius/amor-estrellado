@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Amor Estrellado</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: linear-gradient(to bottom, #0d0d1a 0%, #000000 100%);
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+    }
+
+    #sky {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: none; /* Oculto hasta iniciar */
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: twinkle 2s infinite alternate;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+
+    .shooting-star {
+      opacity: 0.9;
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: white;
+      border-radius: 50%;
+      z-index: 3;
+    }
+
+    .shooting-star::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 150px;
+      height: 2px;
+      background: linear-gradient(90deg, white 0%, rgba(255,255,255,0) 100%);
+      transform: rotate(205deg);
+      transform-origin: left center;
+    }
+
+    .floating-photo {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      z-index: 2;
+      border-radius: 10px;
+      animation: floatUp 10s linear forwards;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(-50vh); opacity: 0; }
+    }
+
+    .phrase {
+      animation: growFade 5s ease-out forwards, neonColorChange 4s infinite alternate;
+      position: absolute;
+      font-size: 20px;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    @keyframes growFade {
+      0% {
+        transform: translateY(100vh) scale(0.5);
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      80% {
+        transform: translateY(30vh) scale(2.5);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(0vh) scale(3);
+        opacity: 0;
+      }
+    }
+
+    @keyframes neonColorChange {
+      0% { color: #ff1aff; text-shadow: 0 0 5px #ff1aff, 0 0 10px #ff1aff; }
+      25% { color: #00ffff; text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff; }
+      50% { color: #39ff14; text-shadow: 0 0 5px #39ff14, 0 0 10px #39ff14; }
+      75% { color: #ff5e00; text-shadow: 0 0 5px #ff5e00, 0 0 10px #ff5e00; }
+      100% { color: #ff1aff; text-shadow: 0 0 5px #ff1aff, 0 0 10px #ff1aff; }
+    }
+
+    #intro-message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 28px;
+      color: #ffffff;
+      text-align: center;
+      z-index: 10;
+      text-shadow: 0 0 8px #ff00ff, 0 0 12px #00ffff;
+      cursor: pointer;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 20px;
+    }
+  </style>
+</head>
+<body>
+  <audio id="bgmusic" src="music.mp3" loop></audio>
+
+  <div id="intro-message">Toca la pantalla para abrir tu regalo 🎁</div>
+  <div id="sky"></div>
+
+  <script>
+    const sky = document.getElementById('sky');
+    const music = document.getElementById('bgmusic');
+    const intro = document.getElementById('intro-message');
+
+    const photos = [
+      "20241218_212856.jpg",
+      "20241218_213300.jpg",
+      "20241218_214436.jpg",
+      "20241218_215749.jpg",
+      "20250101_000850.jpg",
+      "20250101_001134.jpg",
+      "20250220_113038.jpg",
+      "20250220_113749.jpg",
+    ];
+
+    const phrases = [
+      "Eres preciosa", "My love", "Amor de mi vida",
+      "Eres mi razón", "Te amo", "Me encantas", "Te pienso siempre", "Mi vida eres tú"
+    ];
+
+    function startExperience() {
+      // Ocultar intro y mostrar cielo
+      intro.style.display = 'none';
+      sky.style.display = 'block';
+
+      // Reproducir música
+      music.play().catch(() => {});
+
+      // Generar estrellas
+      for (let i = 0; i < 150; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.left = Math.random() * 100 + '%';
+        sky.appendChild(star);
+      }
+
+      // Lanzar estrellas fugaces
+      setInterval(() => {
+        const star = document.createElement('div');
+        star.className = 'shooting-star';
+
+        const startTop = Math.random() * 40 - 10;
+        const startLeft = Math.random() * 100;
+        const offsetX = 800;
+        const offsetY = 800;
+
+        star.style.top = `${startTop}vh`;
+        star.style.left = `${startLeft}vw`;
+
+        star.animate([
+          { transform: 'translate(0, 0)', opacity: 1 },
+          { transform: `translate(${offsetX}px, ${offsetY}px)`, opacity: 0 }
+        ], {
+          duration: 800,
+          easing: 'ease-out',
+          fill: 'forwards'
+        });
+
+        sky.appendChild(star);
+        setTimeout(() => star.remove(), 1100);
+      }, 800);
+
+      // Frases
+      setInterval(() => {
+        const div = document.createElement('div');
+        div.className = 'phrase';
+        div.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+        div.style.left = (Math.random() * 70) + 'vw';
+        sky.appendChild(div);
+        setTimeout(() => div.remove(), 5000);
+      }, 1000);
+
+      // Fotos flotando
+      setInterval(() => {
+        const img = document.createElement('img');
+        img.src = photos[Math.floor(Math.random() * photos.length)];
+        img.className = 'floating-photo';
+        img.style.left = (Math.random() * 90) + 'vw';
+        sky.appendChild(img);
+        setTimeout(() => img.remove(), 10000);
+      }, 3000);
+    }
+
+    // Evento de toque o clic
+    document.addEventListener('click', startExperience, { once: true });
+  </script>
+</body>
+</html>
